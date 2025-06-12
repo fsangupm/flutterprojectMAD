@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'screens/splash_screen.dart';
 import 'screens/second_screen.dart';
 import 'screens/third_screen.dart';
+import 'screens/shared_preferences_screen.dart';
+import 'screens/gps_tracker_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,8 +34,10 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _screens = [
     SplashScreen(),
+    GpsTrackerScreen(),
     SecondScreen(),
     ThirdScreen(),
+    SharedPreferencesScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -47,10 +51,15 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: Center(child: _screens[_selectedIndex]),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Splash',
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.map),
+              label: 'Tracker'
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
@@ -59,6 +68,10 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
             label: 'Third',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.vpn_key),
+            label: 'API Key',
           ),
         ],
         currentIndex: _selectedIndex,
