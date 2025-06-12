@@ -5,11 +5,9 @@ class SecondScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ElevatedButton(
-          child: Text('You are in the SecondScreen. Go to ThirdScreen'),
-          onPressed: () {
-            Navigator.pushNamed(context, '/third');
-          },
+        child: Text(
+          "This is the Second Screen.",
+          style: TextStyle(fontSize: 20),
         ),
       ),
     );
