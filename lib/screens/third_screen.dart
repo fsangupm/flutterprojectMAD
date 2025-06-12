@@ -1,82 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart'; // Add this in pubspec.yaml under dependencies
+import 'package:intl/intl.dart';
+import 'database_helper.dart';
 
-class ThirdScreen extends StatelessWidget {
-  void _showAlertDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Alert Dialog"),
-          content: Text("This is an alert dialog."),
-          actions: [
-            TextButton(
-              child: Text("OK"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+class ThirdScreen extends StatefulWidget {
+  const ThirdScreen({Key? key}) : super(key: key);
 
-  void _showSnackBar(BuildContext context) {
+  @override
+  State<ThirdScreen> createState() => _ThirdScreenState();
+}
+
+class _ThirdScreenState extends State<ThirdScreen> {
+  String? _selectedActivity;
+
+  final List<String> _activities = [
+    'Work',
+    'Leisure',
+    'Eat',
+    'Commute',
+    'Sleep',
+  ];
+
+  Future<void> _logActivity() async {
+    if (_selectedActivity == null) return;
+
+    final timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
+
+    await DatabaseHelper.instance.insertActivity(_selectedActivity!, timestamp);
+
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("This is a SnackBar."),
-      ),
-    );
-  }
-
-  void _showToast() {
-    Fluttertoast.showToast(
-      msg: "This is a Toast.",
-      toastLength: Toast.LENGTH_SHORT,
-      // Remove gravity or let it default
-      // gravity: ToastGravity.BOTTOM, ← remove this line
-    );
-  }
-
-  void _showModalBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: const <Widget>[
-            ListTile(leading: Icon(Icons.share), title: Text('Share')),
-            ListTile(leading: Icon(Icons.link), title: Text('Get link')),
-            ListTile(leading: Icon(Icons.edit), title: Text('Edit name')),
-          ],
-        );
-      },
+      SnackBar(content: Text("Activity '$_selectedActivity' logged at $timestamp")),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      appBar: AppBar(title: const Text('Activity Logger')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
+            const Text('Select Activity:'),
+            ..._activities.map((activity) {
+              return RadioListTile<String>(
+                title: Text(activity),
+                value: activity,
+                groupValue: _selectedActivity,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedActivity = value;
+                  });
+                },
+              );
+            }),
+            const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => _showAlertDialog(context),
-              child: Text("Show AlertDialog"),
-            ),
-            ElevatedButton(
-              onPressed: () => _showSnackBar(context),
-              child: Text("Show SnackBar"),
-            ),
-            ElevatedButton(
-              onPressed: _showToast,
-              child: Text("Show Toast"),
-            ),
-            ElevatedButton(
-              onPressed: () => _showModalBottomSheet(context),
-              child: Text("Show ModalBottomSheet"),
+              onPressed: _logActivity,
+              child: const Text('Log Activity'),
             ),
           ],
         ),
