@@ -5,11 +5,9 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ElevatedButton(
-          child: Text('You are in SplashScreen. Go to Second Screen'),
-          onPressed: () {
-            Navigator.pushNamed(context, '/second');
-          },
+        child: Text(
+          "Welcome to the Splash Screen!",
+          style: TextStyle(fontSize: 20),
         ),
       ),
     );
